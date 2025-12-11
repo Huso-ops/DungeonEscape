@@ -189,10 +189,10 @@ void ADungeonEscapeCharacter::Interact()
 
 void ADungeonEscapeCharacter::MoveFastStarted()
 {
-	GetCharacterMovement()->MaxWalkSpeed = 2000.f;
+	GetCharacterMovement()->MaxWalkSpeed = MaxWalkSpeed;
 }
 
 void ADungeonEscapeCharacter::MoveFastEnding()
 {
-	GetCharacterMovement()->MaxWalkSpeed = 1500.f;
+	GetCharacterMovement()->MaxWalkSpeed = NormalWalkSpeed;
 }

@@ -104,6 +104,12 @@ public:
 	UPROPERTY(EditAnywhere)
 	float InteractSphereRadius = 30.0f;
 
+	UPROPERTY(EditAnywhere)
+	float NormalWalkSpeed = 1500.f;
+
+	UPROPERTY(EditAnywhere)
+	float MaxWalkSpeed = 2000.f;
+
 	void Interact();
 
 	void MoveFastStarted();

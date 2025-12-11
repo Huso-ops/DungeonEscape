@@ -23,6 +23,8 @@ void UTriggerComponent::BeginPlay()
 
 	if (!IsValid(MoverComponentPtr))
 	{
+		UE_LOG(LogTemp, Warning, TEXT("Mover Component Not Found"));
+
 		return;
 	}
 
@@ -31,10 +33,6 @@ void UTriggerComponent::BeginPlay()
 		OnComponentBeginOverlap.AddDynamic(this, &UTriggerComponent::OnOverlapBegin);
 		OnComponentEndOverlap.AddDynamic(this, &UTriggerComponent::OnOverlapEnd);
 	}
-
-	//MoverComponentPtr->ShouldMove = true;
-
-	//AActor* ActorPtr =  MoverComponentPtr->GetOwner();
 }
 
 void UTriggerComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
@@ -50,6 +48,7 @@ void UTriggerComponent::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AAct
 	}
 
 	ActorCount++;
+
 	if (bIsTriggered) 
 	{
 		return;
@@ -80,6 +79,4 @@ void UTriggerComponent::TriggerComponent(const bool& bTriggerValue)
 	bIsTriggered = bTriggerValue;
 
 	MoverComponentPtr->SetShouldMove(bTriggerValue);
-
-	//MoverComponentPtr->ShouldMove = !MoverComponentPtr->ShouldMove;
 }

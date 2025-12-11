@@ -37,7 +37,7 @@ void UMover::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponent
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
 	// Karakter actor baktýðýnda actor haraket etmesi için tasarlanan metot MoveComponent metodu plate tarzý TriggerComponent baðlý bir actor ile kapýnýn açýlmasýný saðlayan bir metot
-	//CheckComponentDistanceWithPlayer(DeltaTime);
+	//IsLookingAtDoor(DeltaTime);
 
 	MoveComponent(DeltaTime);
 }
@@ -65,7 +65,7 @@ void UMover::MoveComponent(const float& DeltaTime)
 	Owner->SetActorLocation(NewLocation);
 }
 
-void UMover::CheckComponentDistanceWithPlayer(const float& DeltaTime)
+void UMover::IsLookingAtDoor(const float& DeltaTime)
 {
 	AActor* Owner = GetOwner();
 

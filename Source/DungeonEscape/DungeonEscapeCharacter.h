@@ -110,5 +110,8 @@ public:
 
 	void MoveFastEnding();
 
+private:
+	UPROPERTY(VisibleAnywhere)
+	TArray<FString> ItemList;
 };
 

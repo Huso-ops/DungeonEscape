@@ -24,7 +24,7 @@ public:
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 	void MoveComponent(const float& DeltaTime);
-	void CheckComponentDistanceWithPlayer(const float& DeltaTime);
+	void IsLookingAtDoor(const float& DeltaTime);
 	bool GetShouldMove() const;
 	void SetShouldMove(const bool& bIsTrigerred);
 

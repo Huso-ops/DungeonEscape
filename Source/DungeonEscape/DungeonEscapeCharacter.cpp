@@ -8,7 +8,9 @@
 #include "EnhancedInputComponent.h"
 #include "InputActionValue.h"
 #include "GameFramework/CharacterMovementComponent.h"
-#include "DungeonEscape.h"
+#include <CollectableItem.h>
+#include <Lock.h>
+#include <DungeonEscape.h>
 
 ADungeonEscapeCharacter::ADungeonEscapeCharacter()
 {
@@ -130,8 +132,6 @@ void ADungeonEscapeCharacter::DoJumpEnd()
 
 void ADungeonEscapeCharacter::Interact()
 {
-	UE_LOG(LogTemp, Warning, TEXT("It is Work"));
-
 	FVector Start = FirstPersonCameraComponent->GetComponentLocation();
 	FVector End = Start + (FirstPersonCameraComponent->GetForwardVector() * MaxInteractDistance);
 	DrawDebugLine(GetWorld(), Start, End, FColor::Red, false, 10.f);
@@ -141,16 +141,6 @@ void ADungeonEscapeCharacter::Interact()
 	//DrawDebugSphere(GetWorld(), Start, InteractSphereRadius, 20.0f, FColor::Green, false, 10.0f);
 	DrawDebugSphere(GetWorld(), End, InteractSphereRadius, 20.0f, FColor::Blue, false, 10.0f);
 
-	/*SweepSingleByChannel(FHitResult & OutHit,
-		const FVector & Start,
-		const FVector & End,
-		const FQuat & Rot,
-		ECollisionChannel TraceChannel,
-		const FCollisionShape & CollisionShape,
-		const FCollisionQueryParams & Params,
-		const FCollisionResponseParams & ResponseParam
-	)*/
-
 	FHitResult HitResult;
 
 	const auto bHasHit = GetWorld()->SweepSingleByChannel(HitResult, Start, End, FQuat::Identity, ECC_GameTraceChannel2, InteractionSphere);
@@ -158,6 +148,7 @@ void ADungeonEscapeCharacter::Interact()
 	if (!bHasHit)
 	{
 		UE_LOG(LogTemp, Warning, TEXT("Didn't Hit Anything"));
+
 		return;
 	}
 
@@ -165,16 +156,35 @@ void ADungeonEscapeCharacter::Interact()
 
 	const auto ActorName = HitActor->GetActorNameOrLabel();
 
-	if (HitActor->ActorHasTag("CollactableItem"))
+	if (HitActor->ActorHasTag("CollectabbleItem"))
 	{
-		
+		if (ACollectableItem* CollectableItem = Cast<ACollectableItem>(HitActor))
+		{
+			ItemList.Add(CollectableItem->ItemName);
+
+			CollectableItem->Destroy();
+		}
 	} 
 	else if (HitActor->ActorHasTag("Lock"))
 	{
-		
-	}
+		if (ALock* LockActor = Cast<ALock>(HitActor))
+		{
+			if (LockActor->GetIsKeyPlaced())
+			{
+				ItemList.Add(LockActor->KeyItemName);
 
-	UE_LOG(LogTemp, Warning, TEXT("Hit %s"), *HitActor->GetName());
+				LockActor->SetIsKeyPlaced(false);
+
+				return;
+			}
+
+			// RemoveSingleSwap fonksiyonu bize int tipinde 1 veya 0 dönüyor
+			if (ItemList.RemoveSingleSwap(LockActor->KeyItemName))
+			{
+				LockActor->SetIsKeyPlaced(true);
+			}
+		}
+	}
 }
 
 void ADungeonEscapeCharacter::MoveFastStarted()
@@ -184,5 +194,5 @@ void ADungeonEscapeCharacter::MoveFastStarted()
 
 void ADungeonEscapeCharacter::MoveFastEnding()
 {
-	GetCharacterMovement()->MaxWalkSpeed = 500.f;
+	GetCharacterMovement()->MaxWalkSpeed = 1500.f;
 }
